@@ -6,6 +6,6 @@ import (
 )
 
 func TestTokens(t *testing.T) {
-	l := Lexer{"1 + 90 hello", 0}
+	l := Lexer{"1 + 90 (1 + 2 ) hello", 0}
 	fmt.Println(l.lex())
 }
