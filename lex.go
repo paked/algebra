@@ -30,6 +30,11 @@ func (lex *Lexer) lex() []Token {
 			continue
 		}
 
+		if lex.isAddition(c) {
+			stream = append(stream, lex.addition())
+			continue
+		}
+
 		if lex.isWhitespace(c) {
 			stream = append(stream, lex.whitespace())
 			continue
@@ -40,6 +45,12 @@ func (lex *Lexer) lex() []Token {
 	}
 
 	return stream
+}
+
+func (lex *Lexer) addition() Token {
+	lex.Next()
+
+	return Token{"Addition", "+"}
 }
 
 func (lex *Lexer) whitespace() Token {
@@ -71,6 +82,13 @@ func (lex *Lexer) number() Token {
 	}
 
 	return Token{"Number", content}
+}
+
+func (lex *Lexer) isAddition(c uint8) bool {
+	if c == '+' {
+		return true
+	}
+	return false
 }
 
 func (lex *Lexer) isWhitespace(c uint8) bool {
