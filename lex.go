@@ -5,6 +5,14 @@ import (
 	"regexp"
 )
 
+const (
+	NumberToken       = "Number"
+	SkipToken         = "Skip"
+	LeftBracketToken  = "LeftBracket"
+	RightBracketToken = "RightBracket"
+	AdditionToken     = "Addition"
+)
+
 type Token struct {
 	Name     string
 	Contents string
@@ -50,7 +58,7 @@ func (lex *Lexer) lex() []Token {
 func (lex *Lexer) addition() Token {
 	lex.Next()
 
-	return Token{"Addition", "+"}
+	return Token{AdditionToken, "+"}
 }
 
 func (lex *Lexer) whitespace() Token {
@@ -59,7 +67,7 @@ func (lex *Lexer) whitespace() Token {
 		content += string(lex.source[lex.location])
 		lex.Next()
 	}
-	return Token{"Skip", content}
+	return Token{SkipToken, content}
 }
 
 func (lex *Lexer) brackets() Token {
@@ -67,10 +75,10 @@ func (lex *Lexer) brackets() Token {
 
 	lex.Next()
 	if c == '(' {
-		return Token{"RightBracket", "("}
+		return Token{RightBracketToken, "("}
 	}
 
-	return Token{"LeftBracket", ")"}
+	return Token{LeftBracketToken, ")"}
 }
 
 func (lex *Lexer) number() Token {
@@ -81,7 +89,7 @@ func (lex *Lexer) number() Token {
 		lex.Next()
 	}
 
-	return Token{"Number", content}
+	return Token{NumberToken, content}
 }
 
 func (lex *Lexer) isAddition(c uint8) bool {
