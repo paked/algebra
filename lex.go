@@ -16,8 +16,8 @@ func (lex *Lexer) lex() []Token {
 	var stream []Token
 	for !lex.End() {
 		c := lex.source[lex.location]
-		if lex.match(c) {
-			stream = append(stream, Token{"Number", string(c)})
+		if lex.isNumber(c) {
+			stream = append(stream, lex.number())
 		}
 
 		lex.Next()
@@ -26,7 +26,18 @@ func (lex *Lexer) lex() []Token {
 	return stream
 }
 
-func (lex *Lexer) match(c uint8) bool {
+func (lex *Lexer) number() Token {
+	var content string
+
+	for !lex.End() && lex.isNumber(lex.source[lex.location]) {
+		content += string(lex.source[lex.location])
+		lex.Next()
+	}
+
+	return Token{"Number", content}
+}
+
+func (lex *Lexer) isNumber(c uint8) bool {
 	res, err := regexp.Match(`\d+`, []byte(string(c)))
 	if err != nil {
 		return false
