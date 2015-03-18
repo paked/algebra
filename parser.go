@@ -23,7 +23,7 @@ type Parser struct {
 }
 
 func (p *Parser) addition() Node {
-	node := p.expression()
+	node := p.multiplication()
 	if t, err := p.Peek(); err == nil && t.Type(AdditionToken) {
 		p.Next()
 		right := p.addition()
@@ -34,6 +34,16 @@ func (p *Parser) addition() Node {
 		p.Next()
 		right := p.addition()
 		node = SubtractionNode{Left: node, Right: right}
+	}
+	return node
+}
+
+func (p *Parser) multiplication() Node {
+	node := p.expression()
+	if t, err := p.Peek(); err == nil && t.Type(MultiplicationToken) {
+		p.Next()
+		right := p.addition()
+		node = MultiplicationNode{Left: node, Right: right}
 	}
 	return node
 }
@@ -128,4 +138,12 @@ type SubtractionNode struct {
 
 func (s SubtractionNode) Eval() int {
 	return s.Left.Eval() - s.Right.Eval()
+}
+
+type MultiplicationNode struct {
+	Left, Right Node
+}
+
+func (m MultiplicationNode) Eval() int {
+	return m.Left.Eval() * m.Right.Eval()
 }
