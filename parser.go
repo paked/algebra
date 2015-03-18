@@ -29,11 +29,12 @@ func (p *Parser) addition() Node {
 		right := p.addition()
 		node = AdditionNode{Left: node, Right: right}
 	}
-	return node
-}
 
-func (p *Parser) multiplication() Node {
-	node := p.expression()
+	if t, err := p.Peek(); err == nil && t.Type(SubtractionToken) {
+		p.Next()
+		right := p.addition()
+		node = SubtractionNode{Left: node, Right: right}
+	}
 	return node
 }
 
@@ -119,4 +120,12 @@ type AdditionNode struct {
 
 func (a AdditionNode) Eval() int {
 	return a.Left.Eval() + a.Right.Eval()
+}
+
+type SubtractionNode struct {
+	Left, Right Node
+}
+
+func (s SubtractionNode) Eval() int {
+	return s.Left.Eval() - s.Right.Eval()
 }

@@ -11,6 +11,7 @@ const (
 	LeftBracketToken  = "LeftBracket"
 	RightBracketToken = "RightBracket"
 	AdditionToken     = "Addition"
+	SubtractionToken  = "Subtraction"
 )
 
 type Token struct {
@@ -55,6 +56,11 @@ func (lex *Lexer) lex() []Token {
 			continue
 		}
 
+		if lex.isSubtraction(c) {
+			stream = append(stream, lex.subtraction())
+			continue
+		}
+
 		if lex.isWhitespace(c) {
 			stream = append(stream, lex.whitespace())
 			continue
@@ -71,6 +77,11 @@ func (lex *Lexer) addition() Token {
 	lex.Next()
 
 	return Token{AdditionToken, "+"}
+}
+
+func (lex *Lexer) subtraction() Token {
+	lex.Next()
+	return Token{SubtractionToken, "-"}
 }
 
 func (lex *Lexer) whitespace() Token {
@@ -102,6 +113,13 @@ func (lex *Lexer) number() Token {
 	}
 
 	return Token{NumberToken, content}
+}
+
+func (lex *Lexer) isSubtraction(c uint8) bool {
+	if c == '-' {
+		return true
+	}
+	return false
 }
 
 func (lex *Lexer) isAddition(c uint8) bool {
