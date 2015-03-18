@@ -18,9 +18,21 @@ type Token struct {
 	Contents string
 }
 
+func (t Token) Type(n string) bool {
+	if n == t.Name {
+		return true
+	}
+
+	return false
+}
+
 type Lexer struct {
 	source   string
 	location int
+}
+
+func (lex *Lexer) Lex() []Token {
+	return lex.lex()
 }
 
 func (lex *Lexer) lex() []Token {
