@@ -29,6 +29,7 @@ func (p *Parser) addition() Node {
 		right := p.addition()
 		node = AdditionNode{Left: node, Right: right}
 	}
+
 	return node
 }
 
@@ -51,6 +52,7 @@ func (p *Parser) multiplication() Node {
 		right := p.multiplication()
 		node = MultiplicationNode{Left: node, Right: right}
 	}
+
 	return node
 }
 
@@ -76,12 +78,12 @@ func (p *Parser) expression() Node {
 		fmt.Println("Error:", err, "Token:", t)
 	}
 
-	fmt.Println("hm", p.tokens[p.location].Type(NumberToken))
 	return nil
 }
 
 func (p *Parser) Parse(tokens []Token) Node {
 	p.tokens = p.cleanseInput(tokens)
+
 	return p.addition()
 }
 
@@ -103,6 +105,7 @@ func (p *Parser) End() bool {
 	if p.location >= len(p.tokens) {
 		return true
 	}
+
 	return false
 }
 
@@ -111,6 +114,7 @@ func (p *Parser) Peek() (Token, error) {
 		fmt.Println("no more tokens..")
 		return Token{}, errors.New("End of tokens...")
 	}
+
 	return p.tokens[p.location], nil
 }
 

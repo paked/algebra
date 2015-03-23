@@ -87,11 +87,13 @@ func (lex *Lexer) addition() Token {
 
 func (lex *Lexer) subtraction() Token {
 	lex.Next()
+
 	return Token{SubtractionToken, "-"}
 }
 
 func (lex *Lexer) multiplication() Token {
 	lex.Next()
+
 	return Token{MultiplicationToken, "*"}
 }
 
@@ -101,6 +103,7 @@ func (lex *Lexer) whitespace() Token {
 		content += string(lex.source[lex.location])
 		lex.Next()
 	}
+
 	return Token{SkipToken, content}
 }
 
@@ -130,6 +133,7 @@ func (lex *Lexer) isSubtraction(c uint8) bool {
 	if c == '-' {
 		return true
 	}
+
 	return false
 }
 
@@ -137,6 +141,7 @@ func (lex *Lexer) isAddition(c uint8) bool {
 	if c == '+' {
 		return true
 	}
+
 	return false
 }
 
@@ -144,6 +149,7 @@ func (lex *Lexer) isMultiplication(c uint8) bool {
 	if c == '*' {
 		return true
 	}
+
 	return false
 }
 
@@ -152,6 +158,7 @@ func (lex *Lexer) isWhitespace(c uint8) bool {
 	if err != nil {
 		return false
 	}
+
 	return res
 }
 
@@ -168,6 +175,7 @@ func (lex *Lexer) isNumber(c uint8) bool {
 	if err != nil {
 		return false
 	}
+
 	return res
 }
 
