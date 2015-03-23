@@ -25,6 +25,12 @@ func TestMultiplication(t *testing.T) {
 	testSum(t, "-10 * 10", -100)
 }
 
+func TestDivision(t *testing.T) {
+	testSum(t, "2 / 1", 2)
+	testSum(t, "10 / 2", 5)
+	testSum(t, "-100 / 5", -20)
+}
+
 func TestBrackets(t *testing.T) {
 	testSum(t, "(2 + 2) * 2", 8)
 	testSum(t, "(2 - 2) * 1000", 0)
