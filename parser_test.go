@@ -4,14 +4,28 @@ import (
 	"testing"
 )
 
-func TestParse(t *testing.T) {
-	println("==EVALUTAING==")
+func TestNumbers(t *testing.T) {
+	testSum(t, "1", 1)
+	testSum(t, "-1", -1)
+}
 
-	Evaluate("1 + 1 + 100")
-	Evaluate("1 - 1")
-	Evaluate("10 + 10 - 5")
+func TestAddition(t *testing.T) {
+	testSum(t, "1 + 1", 2)
+	testSum(t, "100 + 1", 101)
+}
 
-	Evaluate("10 * 10 + 10")
+func TestSubtraction(t *testing.T) {
+	testSum(t, "1 - 1", 0)
+	testSum(t, "100 - 1", 99)
+}
 
-	Evaluate("10 + 10 * 10")
+func TestMultiplication(t *testing.T) {
+	testSum(t, "1 * 1", 1)
+	testSum(t, "10 * 10", 100)
+}
+
+func testSum(t *testing.T, source string, expected int) {
+	if got := Evaluate(source); got != expected {
+		t.Errorf("number error: %v should equal %d, got %d", source, expected, got)
+	}
 }

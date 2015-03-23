@@ -6,15 +6,15 @@ import (
 	"strconv"
 )
 
-func Evaluate(source string) {
+func Evaluate(source string) int {
 	l := Lexer{source, 0}
 	tokens := l.Lex()
 	fmt.Println("tokens are:", tokens)
 
 	p := Parser{}
 	n := p.Parse(tokens)
-	fmt.Println(n)
-	fmt.Println(n.Eval())
+
+	return n.Eval()
 }
 
 type Parser struct {
