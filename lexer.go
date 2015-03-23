@@ -167,8 +167,7 @@ func (lex *Lexer) isBrackets(c uint8) bool {
 
 func (lex *Lexer) isNumber(c uint8) bool {
 	if c == '-' && unicode.IsNumber(rune(lex.source[lex.location+1])) {
-		lex.Next()
-		c = lex.source[lex.location+1]
+		return true
 	}
 
 	if unicode.IsNumber(rune(c)) {
