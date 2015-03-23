@@ -13,6 +13,7 @@ const (
 	AdditionToken       = "Addition"
 	SubtractionToken    = "Subtraction"
 	MultiplicationToken = "Multiplication"
+	DivisionToken       = "Division"
 )
 
 type Token struct {
@@ -67,6 +68,11 @@ func (lex *Lexer) lex() []Token {
 			continue
 		}
 
+		if lex.isDivision(c) {
+			stream = append(stream, lex.division())
+			continue
+		}
+
 		if lex.isWhitespace(c) {
 			stream = append(stream, lex.whitespace())
 			continue
@@ -95,6 +101,12 @@ func (lex *Lexer) multiplication() Token {
 	lex.Next()
 
 	return Token{MultiplicationToken, "*"}
+}
+
+func (lex *Lexer) division() Token {
+	lex.Next()
+
+	return Token{DivisionToken, "/"}
 }
 
 func (lex *Lexer) whitespace() Token {
@@ -147,6 +159,14 @@ func (lex *Lexer) isAddition(c uint8) bool {
 
 func (lex *Lexer) isMultiplication(c uint8) bool {
 	if c == '*' {
+		return true
+	}
+
+	return false
+}
+
+func (lex *Lexer) isDivision(c uint8) bool {
+	if c == '/' {
 		return true
 	}
 

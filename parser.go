@@ -46,11 +46,22 @@ func (p *Parser) subtraction() Node {
 }
 
 func (p *Parser) multiplication() Node {
-	node := p.expression()
+	node := p.division()
 	if t, err := p.Peek(); err == nil && t.Type(MultiplicationToken) {
 		p.Next()
 		right := p.multiplication()
 		node = MultiplicationNode{Left: node, Right: right}
+	}
+
+	return node
+}
+
+func (p *Parser) division() Node {
+	node := p.expression()
+	if t, err := p.Peek(); err == nil && t.Type(DivisionToken) {
+		p.Next()
+		right := p.division()
+		node = DivisionNode{Left: node, Right: right}
 	}
 
 	return node
@@ -156,4 +167,12 @@ type MultiplicationNode struct {
 
 func (m MultiplicationNode) Eval() int {
 	return m.Left.Eval() * m.Right.Eval()
+}
+
+type DivisionNode struct {
+	Left, Right Node
+}
+
+func (d DivisionNode) Eval() int {
+	return d.Left.Eval() / d.Right.Eval()
 }
