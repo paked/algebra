@@ -12,4 +12,6 @@ func TestParse(t *testing.T) {
 	Evaluate("10 + 10 - 5")
 
 	Evaluate("10 * 10 + 10")
+
+	Evaluate("10 + 10 * 10")
 }

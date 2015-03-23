@@ -42,7 +42,7 @@ func (p *Parser) multiplication() Node {
 	node := p.expression()
 	if t, err := p.Peek(); err == nil && t.Type(MultiplicationToken) {
 		p.Next()
-		right := p.addition()
+		right := p.multiplication()
 		node = MultiplicationNode{Left: node, Right: right}
 	}
 	return node
