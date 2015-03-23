@@ -23,18 +23,24 @@ type Parser struct {
 }
 
 func (p *Parser) addition() Node {
-	node := p.multiplication()
+	node := p.subtraction()
 	if t, err := p.Peek(); err == nil && t.Type(AdditionToken) {
 		p.Next()
 		right := p.addition()
 		node = AdditionNode{Left: node, Right: right}
 	}
+	return node
+}
+
+func (p *Parser) subtraction() Node {
+	node := p.multiplication()
 
 	if t, err := p.Peek(); err == nil && t.Type(SubtractionToken) {
 		p.Next()
-		right := p.addition()
+		right := p.subtraction()
 		node = SubtractionNode{Left: node, Right: right}
 	}
+
 	return node
 }
 
