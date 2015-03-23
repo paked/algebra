@@ -2,7 +2,7 @@ package algebra
 
 import (
 	"fmt"
-	"regexp"
+	"unicode"
 )
 
 const (
@@ -154,12 +154,7 @@ func (lex *Lexer) isMultiplication(c uint8) bool {
 }
 
 func (lex *Lexer) isWhitespace(c uint8) bool {
-	res, err := regexp.Match(`\s`, []byte(string(c)))
-	if err != nil {
-		return false
-	}
-
-	return res
+	return unicode.IsSpace(rune(c))
 }
 
 func (lex *Lexer) isBrackets(c uint8) bool {
@@ -171,12 +166,16 @@ func (lex *Lexer) isBrackets(c uint8) bool {
 }
 
 func (lex *Lexer) isNumber(c uint8) bool {
-	res, err := regexp.Match(`\d+`, []byte(string(c)))
-	if err != nil {
-		return false
+	if c == '-' && unicode.IsNumber(rune(lex.source[lex.location+1])) {
+		lex.Next()
+		c = lex.source[lex.location+1]
 	}
 
-	return res
+	if unicode.IsNumber(rune(c)) {
+		return true
+	}
+
+	return false
 }
 
 func (lex *Lexer) End() bool {
