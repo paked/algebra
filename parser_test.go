@@ -22,6 +22,12 @@ func TestSubtraction(t *testing.T) {
 func TestMultiplication(t *testing.T) {
 	testSum(t, "1 * 1", 1)
 	testSum(t, "10 * 10", 100)
+	testSum(t, "-10 * 10", -100)
+}
+
+func TestBrackets(t *testing.T) {
+	testSum(t, "(2 + 2) * 2", 8)
+	testSum(t, "(2 - 2) * 1000", 0)
 }
 
 func testSum(t *testing.T, source string, expected int) {
