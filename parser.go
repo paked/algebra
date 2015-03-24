@@ -16,8 +16,10 @@ func Evaluate(source string) (int, error) {
 	fmt.Println("tokens are:", tokens)
 
 	p := Parser{}
-	n := p.Parse(tokens)
-
+	n, err := p.Parse(tokens)
+	if err != nil {
+		return -1, err
+	}
 	return n.Eval(), nil
 }
 
@@ -26,92 +28,122 @@ type Parser struct {
 	location int
 }
 
-func (p *Parser) addition() Node {
-	node := p.subtraction()
+func (p *Parser) addition() (Node, error) {
+	node, err := p.subtraction()
+	if err != nil {
+		return node, err
+	}
 
 	t, err := p.Peek()
 	if err != nil {
 		fmt.Println(err)
-		return node
+		return node, err
 	}
 
 	if !t.Type(AdditionToken) {
-		return node
+		return node, nil
 	}
 
 	p.Next()
-	right := p.addition()
+	right, err := p.addition()
+	if err != nil {
+		return node, err
+	}
 	node = AdditionNode{Left: node, Right: right}
 
-	return node
+	return node, nil
 }
 
-func (p *Parser) subtraction() Node {
-	node := p.multiplication()
+func (p *Parser) subtraction() (Node, error) {
+	node, err := p.multiplication()
+	if err != nil {
+		return node, err
+	}
 
 	t, err := p.Peek()
 	if err != nil {
-		return node
+		return node, err
 	}
 
 	if !t.Type(SubtractionToken) {
-		return node
+		return node, nil
 	}
 
 	p.Next()
-	right := p.subtraction()
+	right, err := p.subtraction()
+	if err != nil {
+		return node, err
+	}
 	node = SubtractionNode{Left: node, Right: right}
 
-	return node
+	return node, nil
 }
 
-func (p *Parser) multiplication() Node {
-	node := p.division()
+func (p *Parser) multiplication() (Node, error) {
+	node, err := p.division()
+	if err != nil {
+		return node, err
+	}
 
 	t, err := p.Peek()
 	if err != nil {
-		return node
+		return node, err
 	}
 
 	if !t.Type(MultiplicationToken) {
-		return node
+		return node, nil
 	}
 
 	p.Next()
-	right := p.multiplication()
+	right, err := p.multiplication()
+	if err != nil {
+		return node, err
+	}
 	node = MultiplicationNode{Left: node, Right: right}
 
-	return node
+	return node, nil
 }
 
-func (p *Parser) division() Node {
-	node := p.expression()
+func (p *Parser) division() (Node, error) {
+	node, err := p.expression()
+	if err != nil {
+		return node, err
+	}
+
 	t, err := p.Peek()
 	if err != nil {
-		return node
+		return node, err
 	}
 
 	if !t.Type(DivisionToken) {
-		return node
+		return node, nil
 	}
 
 	p.Next()
-	right := p.division()
+	right, err := p.division()
+	if err != nil {
+		return node, err
+	}
 	node = DivisionNode{Left: node, Right: right}
 
-	return node
+	return node, nil
 }
 
-func (p *Parser) expression() Node {
+func (p *Parser) expression() (Node, error) {
 	if t, err := p.Peek(); err == nil && t.Type(RightBracketToken) {
 		p.Next()
-		node := p.addition()
+		node, err := p.addition()
+		if err != nil {
+			return node, err
+		}
+
 		if t, err := p.Peek(); err == nil && !t.Type(LeftBracketToken) {
 			fmt.Println("No left bracket!")
-			return nil
+			return node, errors.New("Expecting left bracket, didnt get it!")
 		}
+
 		p.Next()
-		return node
+		return node, nil
 	}
 
 	if t, err := p.Peek(); err == nil && t.Type(NumberToken) {
@@ -119,15 +151,15 @@ func (p *Parser) expression() Node {
 		node := NumberNode{i}
 		p.Next()
 		fmt.Println("created number node!")
-		return node
+		return node, nil
 	} else {
 		fmt.Println("Error:", err, "Token:", t)
 	}
 
-	return nil
+	return nil, errors.New("Invalid token!")
 }
 
-func (p *Parser) Parse(tokens []Token) Node {
+func (p *Parser) Parse(tokens []Token) (Node, error) {
 	p.tokens = p.cleanseInput(tokens)
 
 	return p.addition()
@@ -158,7 +190,7 @@ func (p *Parser) End() bool {
 func (p *Parser) Peek() (Token, error) {
 	if p.End() {
 		fmt.Println("no more tokens..")
-		return Token{}, errors.New("End of tokens...")
+		return Token{}, nil
 	}
 
 	return p.tokens[p.location], nil
