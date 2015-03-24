@@ -36,7 +36,6 @@ func (p *Parser) addition() Node {
 	}
 
 	p.Next()
-
 	right := p.addition()
 	node = AdditionNode{Left: node, Right: right}
 
@@ -46,33 +45,55 @@ func (p *Parser) addition() Node {
 func (p *Parser) subtraction() Node {
 	node := p.multiplication()
 
-	if t, err := p.Peek(); err == nil && t.Type(SubtractionToken) {
-		p.Next()
-		right := p.subtraction()
-		node = SubtractionNode{Left: node, Right: right}
+	t, err := p.Peek()
+	if err != nil {
+		return node
 	}
+
+	if !t.Type(SubtractionToken) {
+		return node
+	}
+
+	p.Next()
+	right := p.subtraction()
+	node = SubtractionNode{Left: node, Right: right}
 
 	return node
 }
 
 func (p *Parser) multiplication() Node {
 	node := p.division()
-	if t, err := p.Peek(); err == nil && t.Type(MultiplicationToken) {
-		p.Next()
-		right := p.multiplication()
-		node = MultiplicationNode{Left: node, Right: right}
+
+	t, err := p.Peek()
+	if err != nil {
+		return node
 	}
+
+	if !t.Type(MultiplicationToken) {
+		return node
+	}
+
+	p.Next()
+	right := p.multiplication()
+	node = MultiplicationNode{Left: node, Right: right}
 
 	return node
 }
 
 func (p *Parser) division() Node {
 	node := p.expression()
-	if t, err := p.Peek(); err == nil && t.Type(DivisionToken) {
-		p.Next()
-		right := p.division()
-		node = DivisionNode{Left: node, Right: right}
+	t, err := p.Peek()
+	if err != nil {
+		return node
 	}
+
+	if !t.Type(DivisionToken) {
+		return node
+	}
+
+	p.Next()
+	right := p.division()
+	node = DivisionNode{Left: node, Right: right}
 
 	return node
 }
