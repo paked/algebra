@@ -45,41 +45,23 @@ func (lex *Lexer) lex() []Token {
 
 		if lex.isNumber(c) {
 			stream = append(stream, lex.number())
-			continue
-		}
-
-		if lex.isBrackets(c) {
+		} else if lex.isBrackets(c) {
 			stream = append(stream, lex.brackets())
-			continue
-		}
-
-		if lex.isAddition(c) {
+		} else if lex.isAddition(c) {
 			stream = append(stream, lex.addition())
-			continue
-		}
-
-		if lex.isSubtraction(c) {
+		} else if lex.isSubtraction(c) {
 			stream = append(stream, lex.subtraction())
-			continue
-		}
-
-		if lex.isMultiplication(c) {
+		} else if lex.isMultiplication(c) {
 			stream = append(stream, lex.multiplication())
-			continue
-		}
-
-		if lex.isDivision(c) {
+		} else if lex.isDivision(c) {
 			stream = append(stream, lex.division())
-			continue
-		}
-
-		if lex.isWhitespace(c) {
+		} else if lex.isWhitespace(c) {
 			stream = append(stream, lex.whitespace())
-			continue
+		} else {
+			fmt.Println("Invalid token!")
+			return stream
 		}
 
-		fmt.Println("Invalid token!")
-		lex.Next()
 	}
 
 	return stream
