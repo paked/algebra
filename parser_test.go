@@ -41,7 +41,13 @@ func TestBrackets(t *testing.T) {
 }
 
 func testSum(t *testing.T, source string, expected int) {
-	if got := Evaluate(source); got != expected {
+	got, err := Evaluate(source)
+	if err != nil {
+		t.Error("error:", err)
+		return
+	}
+
+	if got != expected {
 		t.Errorf("number error: %v should equal %d, got %d", source, expected, got)
 	}
 }

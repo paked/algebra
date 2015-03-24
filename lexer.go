@@ -1,7 +1,7 @@
 package algebra
 
 import (
-	"fmt"
+	"errors"
 	"unicode"
 )
 
@@ -14,6 +14,10 @@ const (
 	SubtractionToken    = "Subtraction"
 	MultiplicationToken = "Multiplication"
 	DivisionToken       = "Division"
+)
+
+var (
+	InvalidInputError = errors.New("lexer: invalid input")
 )
 
 type Token struct {
@@ -34,11 +38,11 @@ type Lexer struct {
 	location int
 }
 
-func (lex *Lexer) Lex() []Token {
+func (lex *Lexer) Lex() ([]Token, error) {
 	return lex.lex()
 }
 
-func (lex *Lexer) lex() []Token {
+func (lex *Lexer) lex() ([]Token, error) {
 	var stream []Token
 	for !lex.End() {
 		c := lex.source[lex.location]
@@ -58,13 +62,12 @@ func (lex *Lexer) lex() []Token {
 		} else if lex.isWhitespace(c) {
 			stream = append(stream, lex.whitespace())
 		} else {
-			fmt.Println("Invalid token!")
-			return stream
+			return stream, InvalidInputError
 		}
 
 	}
 
-	return stream
+	return stream, nil
 }
 
 func (lex *Lexer) addition() Token {
