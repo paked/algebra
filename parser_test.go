@@ -12,11 +12,15 @@ func TestNumbers(t *testing.T) {
 func TestAddition(t *testing.T) {
 	testSum(t, "1 + 1", 2)
 	testSum(t, "100 + 1", 101)
+
+	testSum(t, "1 + -1", 0)
 }
 
 func TestSubtraction(t *testing.T) {
 	testSum(t, "1 - 1", 0)
 	testSum(t, "100 - 1", 99)
+
+	testSum(t, "100 - -1", 101)
 }
 
 func TestMultiplication(t *testing.T) {
