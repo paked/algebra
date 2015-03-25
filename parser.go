@@ -2,7 +2,6 @@ package algebra
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 )
 
@@ -12,8 +11,6 @@ func Evaluate(source string) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-
-	fmt.Println("tokens are:", tokens)
 
 	p := Parser{}
 	n, err := p.Parse(tokens)
@@ -36,7 +33,6 @@ func (p *Parser) addition() (Node, error) {
 
 	t, err := p.Peek()
 	if err != nil {
-		fmt.Println(err)
 		return node, err
 	}
 
@@ -152,7 +148,6 @@ func (p *Parser) expression() (Node, error) {
 	}
 
 	if t, err := p.Peek(); err == nil && !t.Type(LeftBracketToken) {
-		fmt.Println("No left bracket!")
 		return node, errors.New("Expecting left bracket, didnt get it!")
 	}
 
@@ -175,8 +170,6 @@ func (p *Parser) cleanseInput(tokens []Token) []Token {
 		}
 	}
 
-	fmt.Println("cleansed tokens are:", output)
-
 	return output
 }
 
@@ -190,7 +183,6 @@ func (p *Parser) End() bool {
 
 func (p *Parser) Peek() (Token, error) {
 	if p.End() {
-		fmt.Println("no more tokens..")
 		return Token{}, nil
 	}
 
