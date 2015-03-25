@@ -130,33 +130,34 @@ func (p *Parser) division() (Node, error) {
 }
 
 func (p *Parser) expression() (Node, error) {
-	if t, err := p.Peek(); err == nil && t.Type(RightBracketToken) {
-		p.Next()
-		node, err := p.addition()
+	t, err := p.Peek()
+	if !t.Type(RightBracketToken) {
+		if !t.Type(NumberToken) {
+			return NumberNode{}, errors.New("Invalid token!")
+		}
+
+		i, err := strconv.Atoi(t.Contents)
 		if err != nil {
-			return node, err
+			return NumberNode{}, err
 		}
-
-		if t, err := p.Peek(); err == nil && !t.Type(LeftBracketToken) {
-			fmt.Println("No left bracket!")
-			return node, errors.New("Expecting left bracket, didnt get it!")
-		}
-
-		p.Next()
-		return node, nil
-	}
-
-	if t, err := p.Peek(); err == nil && t.Type(NumberToken) {
-		i, _ := strconv.Atoi(t.Contents)
 		node := NumberNode{i}
 		p.Next()
-		fmt.Println("created number node!")
 		return node, nil
-	} else {
-		fmt.Println("Error:", err, "Token:", t)
 	}
 
-	return nil, errors.New("Invalid token!")
+	p.Next()
+	node, err := p.addition()
+	if err != nil {
+		return node, err
+	}
+
+	if t, err := p.Peek(); err == nil && !t.Type(LeftBracketToken) {
+		fmt.Println("No left bracket!")
+		return node, errors.New("Expecting left bracket, didnt get it!")
+	}
+
+	p.Next()
+	return node, nil
 }
 
 func (p *Parser) Parse(tokens []Token) (Node, error) {
