@@ -6,8 +6,8 @@ import (
 )
 
 func Evaluate(source string) (int, error) {
-	l := Lexer{source, 0}
-	tokens, err := l.Lex()
+	l := Lexer{}
+	tokens, err := l.Lex(source)
 	if err != nil {
 		return -1, err
 	}

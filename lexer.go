@@ -38,7 +38,9 @@ type Lexer struct {
 	location int
 }
 
-func (lex *Lexer) Lex() ([]Token, error) {
+func (lex *Lexer) Lex(source string) ([]Token, error) {
+	lex.source = source
+	lex.location = 0
 	return lex.lex()
 }
 
