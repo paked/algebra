@@ -40,6 +40,13 @@ func TestBrackets(t *testing.T) {
 	testSum(t, "(2 - 2) * 1000", 0)
 }
 
+func TestPowers(t *testing.T) {
+	testSum(t, "4^2", 16)
+	testSum(t, "4^4", 256)
+	testSum(t, "9^2", 81)
+	testSum(t, "9^-2", 0)
+}
+
 func testSum(t *testing.T, source string, expected int) {
 	got, err := Evaluate(source)
 	if err != nil {
