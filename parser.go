@@ -101,7 +101,7 @@ func (p *Parser) multiplication() (Node, error) {
 }
 
 func (p *Parser) division() (Node, error) {
-	node, err := p.expression()
+	node, err := p.exponents()
 	if err != nil {
 		return node, err
 	}
@@ -123,6 +123,31 @@ func (p *Parser) division() (Node, error) {
 	node = DivisionNode{Left: node, Right: right}
 
 	return node, nil
+}
+
+func (p *Parser) exponents() (Node, error) {
+	node, err := p.expression()
+	if err != nil {
+		return node, err
+	}
+
+	t, err := p.Peek()
+	if err != nil {
+		return node, err
+	}
+
+	if !t.Type(PowerToken) {
+		return node, nil
+	}
+
+	p.Next()
+	right, err := p.exponents()
+	if err != nil {
+		return node, err
+	}
+	node = PowerNode{Left: node, Right: right}
+
+	return node, err
 }
 
 func (p *Parser) expression() (Node, error) {
