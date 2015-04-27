@@ -1,5 +1,9 @@
 package algebra
 
+import (
+	"math"
+)
+
 type Node interface {
 	Eval() int
 }
@@ -42,4 +46,12 @@ type DivisionNode struct {
 
 func (d DivisionNode) Eval() int {
 	return d.Left.Eval() / d.Right.Eval()
+}
+
+type PowerNode struct {
+	Left, Right Node
+}
+
+func (pn PowerNode) Eval() int {
+	return int(math.Pow(float64(pn.Left.Eval()), float64(pn.Right.Eval())))
 }

@@ -14,6 +14,7 @@ const (
 	SubtractionToken    = "Subtraction"
 	MultiplicationToken = "Multiplication"
 	DivisionToken       = "Division"
+	PowerToken          = "Power"
 )
 
 var (
@@ -51,6 +52,8 @@ func (lex *Lexer) lex() ([]Token, error) {
 
 		if lex.isNumber(c) {
 			stream = append(stream, lex.number())
+		} else if lex.isPower(c) {
+			stream = append(stream, lex.power())
 		} else if lex.isBrackets(c) {
 			stream = append(stream, lex.brackets())
 		} else if lex.isAddition(c) {
@@ -96,6 +99,12 @@ func (lex *Lexer) division() Token {
 	return Token{DivisionToken, "/"}
 }
 
+func (lex *Lexer) power() Token {
+	lex.Next()
+
+	return Token{PowerToken, "^"}
+}
+
 func (lex *Lexer) whitespace() Token {
 	var content string
 	for !lex.End() && lex.isWhitespace(lex.source[lex.location]) {
@@ -126,6 +135,14 @@ func (lex *Lexer) number() Token {
 	}
 
 	return Token{NumberToken, content}
+}
+
+func (lex *Lexer) isPower(c uint8) bool {
+	if c == '^' {
+		return true
+	}
+
+	return false
 }
 
 func (lex *Lexer) isSubtraction(c uint8) bool {
